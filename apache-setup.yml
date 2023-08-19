@@ -1,0 +1,18 @@
+---
+- name: Install httpd alias
+  hosts: all
+  become: yes
+  tasks:
+  - name: Generate a basic homepage from jinja2 template
+    ansible.builtin.copy:
+      src: alias.conf
+      dest: /var/www/html/index.html
+      force: yes
+  - name: Firewall task
+    ansible.posix.firewalld:
+      service: "{{ item }}"
+      permanent: true
+      state: enabled
+    loop:
+      - http
+      - https
